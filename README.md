@@ -1,288 +1,249 @@
-Real-Time Chat Application
+# Real-Time Chat Application
 
-A real-time web-based chat application built using Java, Spring Boot,
-WebSocket, STOMP, SockJS, and Bootstrap. The application allows
-multiple users to connect to a shared chat room and exchange messages in
-real time without refreshing the page.
+A real-time web-based chat application built using **Java, Spring Boot, WebSocket, STOMP, SockJS, and Bootstrap**.
 
-🚀 Live Deployment
+## 🚀 Live Deployment
 
-http://3.26.238.10:8080/chat
+**[Open Chat Application](http://3.26.238.10:8080/chat)**
 
-The application is currently deployed on AWS EC2 using a public IP.
-The URL may become unavailable if the EC2 instance is stopped or if
-its public IP changes.
+## ✨ Features
 
-✨ Features
+- Real-time messaging using WebSocket
+- STOMP messaging protocol
+- SockJS fallback support
+- Multiple users in the same chat room
+- Username-based message display
+- Consistent username colors
+- Responsive UI using Bootstrap
+- Dockerized deployment
+- AWS EC2 deployment
 
-Real-time messaging using WebSocket
+## 🛠️ Technologies Used
 
-STOMP messaging protocol
+### Backend
 
-SockJS fallback support
+- Java 21
+- Spring Boot
+- Spring WebSocket
+- STOMP
+- SockJS
 
-Multiple users in the same chat room
+### Frontend
 
-Username-based message display
+- HTML
+- CSS
+- JavaScript
+- Bootstrap
 
-Consistent username colors
+### Deployment
 
-Bootstrap-based responsive UI
+- Docker
+- AWS EC2
+- GitHub
 
-Spring Boot backend
+## 🏗️ Architecture
 
-Dockerized deployment
-
-AWS EC2 deployment
-
-🛠️ Technologies Used
-
-Backend
-
-Java 21
-
-Spring Boot
-
-Spring WebSocket
-
-STOMP
-
-SockJS
-
-Frontend
-
-HTML
-
-CSS
-
-JavaScript
-
-Bootstrap
-
-Deployment
-
-Docker
-
-AWS EC2
-
-GitHub
-
-🏗️ Architecture
-
+```text
 User Browser
      |
-     | SockJS / STOMP
+     v
+SockJS + STOMP
+     |
      v
 Spring Boot Application
      |
-     | @MessageMapping
      v
 Chat Controller
      |
-     | @SendTo
      v
-STOMP Topic
+@MessageMapping("/sendMessage")
+     |
+     v
+@SendTo("/topic/message")
      |
      v
 All Connected Clients
 
-🔄 Message Flow
+## 🔄 Message Flow
 
-The user opens the chat application.
+1. User opens the chat application.
+2. Browser establishes a WebSocket connection through SockJS.
+3. Client subscribes to `/topic/message`.
+4. User sends a message to `/app/sendMessage`.
+5. Spring Boot receives the message through `@MessageMapping`.
+6. The message is broadcast to `/topic/message`.
+7. All connected users receive the message in real time.
 
-The browser establishes a connection with the Spring Boot WebSocket
-endpoint /chat.
+## 🔌 WebSocket Destinations
 
-The client subscribes to /topic/message.
+| Destination | Purpose |
+|---|---|
+| `/chat` | WebSocket connection endpoint |
+| `/app` | Application destination prefix |
+| `/topic` | Message broker destination |
+| `/app/sendMessage` | Send chat messages |
+| `/topic/message` | Broadcast messages |
 
-When a user sends a message, the client sends it to
-/app/sendMessage.
+## 📁 Project Structure
 
-Spring Boot receives the message through
-@MessageMapping("/sendMessage").
-
-The message is broadcast to /topic/message.
-
-All subscribed clients receive and display the message instantly.
-
-🔌 WebSocket Destinations
-
-Purpose              Destination
-
-WebSocket endpoint   /chat
-Application prefix   /app
-Broker prefix        /topic
-Send message         /app/sendMessage
-Subscribe            /topic/message
-
-📁 Project Structure
-
+```text
 RealTime-Chat-Application/
+│
 ├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── ...
-│   │   └── resources/
-│   │       ├── static/
-│   │       ├── templates/
-│   │       └── application.properties
-│   └── test/
+│   └── main/
+│       ├── java/
+│       └── resources/
+│
 ├── Dockerfile
 ├── pom.xml
 ├── mvnw
 ├── mvnw.cmd
 └── README.md
 
-💻 Run Locally
+## ▶️ How to Run the Application
 
-Prerequisites
+### 1. Clone the Repository
 
-Java 21
-
-Maven
-
-Git
-
-Docker (optional)
-
-Clone the Repository
-
+```bash
 git clone https://github.com/yuvanesh-m/RealTime-Chat-Application.git
 cd RealTime-Chat-Application
+```
 
-Build and Run
+### 2. Build the Application
 
-./mvnw clean package
-./mvnw spring-boot:run
-
-If required:
-
+```bash
 chmod +x mvnw
+./mvnw clean package -DskipTests
+```
 
-Open:
+### 3. Run the Application Locally
+
+```bash
+./mvnw spring-boot:run
+```
+
+Open the application in your browser:
 
 http://localhost:8080/chat
 
-🐳 Docker
+### 4. Run Using Docker
 
-The application uses Eclipse Temurin Java 21 as the runtime image.
+Build the Docker image:
 
-Build the JAR
-
-./mvnw clean package -DskipTests
-
-Build the Docker Image
-
+```bash
 docker build -t chat-app:latest .
+```
 
-Run the Container
+Run the Docker container:
 
-docker run -d   --name chat-app   --restart unless-stopped   -p 8080:8080   chat-app:latest
+```bash
+docker run -d --name chat-app --restart unless-stopped -p 8080:8080 chat-app:latest
+```
+
+Check the running container:
+
+```bash
+docker ps
+```
+
+View application logs:
+
+```bash
+docker logs -f chat-app
+```
+
+Open the application:
+
+http://localhost:8080/chat
+
+### 5. Deploy on AWS EC2
+
+Connect to your AWS EC2 instance and clone the repository:
+
+```bash
+git clone https://github.com/yuvanesh-m/RealTime-Chat-Application.git
+cd RealTime-Chat-Application
+```
+
+Build the application:
+
+```bash
+chmod +x mvnw
+./mvnw clean package -DskipTests
+```
+
+Build the Docker image:
+
+```bash
+docker build -t chat-app:latest .
+```
+
+Run the Docker container:
+
+```bash
+docker run -d --name chat-app --restart unless-stopped -p 8080:8080 chat-app:latest
+```
 
 Check the container:
 
+```bash
 docker ps
+```
 
-View logs:
+View application logs:
 
+```bash
 docker logs -f chat-app
+```
 
-☁️ AWS EC2 Deployment
+### 6. Configure AWS Security Group
 
-The application is deployed on an AWS EC2 instance using Docker.
+Add an inbound rule to the EC2 Security Group:
 
-Local Development
-       |
-       v
-     GitHub
-       |
-       v
-    AWS EC2
-       |
-       v
- Docker Image
-       |
-       v
- Docker Container
-       |
-       v
-   Port 8080
-       |
-       v
- Public Internet
+| Type | Port | Source |
+|---|---:|---|
+| Custom TCP | 8080 | 0.0.0.0/0 |
 
-Deployment Steps
+### 7. Access the Deployed Application
 
-git clone https://github.com/yuvanesh-m/RealTime-Chat-Application.git
-cd RealTime-Chat-Application
+The application is deployed on AWS EC2 and can be accessed at:
 
-./mvnw clean package -DskipTests
+**http://3.26.238.10:8080/chat**
 
-docker build -t chat-app:latest .
+### 8. Docker Container Management
 
-docker run -d   --name chat-app   --restart unless-stopped   -p 8080:8080   chat-app:latest
+Stop the container:
 
-The EC2 security group must allow inbound TCP traffic on port 8080.
-
-🔐 WebSocket Configuration
-
-For the deployed application, the WebSocket endpoint can be configured
-as:
-
-registry.addEndpoint("/chat")
-        .setAllowedOriginPatterns("*")
-        .withSockJS();
-
-For production, restrict allowed origins to the actual application
-domain instead of using *.
-
-🧪 Testing
-
-Open the deployed application in multiple browser tabs:
-
-http://3.26.238.10:8080/chat
-
-Use different usernames and send messages. Messages should be broadcast
-to all connected clients in real time.
-
-🔧 Useful Docker Commands
-
-docker ps
-docker ps -a
-docker logs chat-app
-docker logs -f chat-app
+```bash
 docker stop chat-app
+```
+
+Start the container:
+
+```bash
 docker start chat-app
-docker rm chat-app
+```
 
-🔮 Future Enhancements
+Restart the container:
 
-User authentication and authorization
+```bash
+docker restart chat-app
+```
 
-Private one-to-one messaging
+Check container status:
 
-Persistent chat history
+```bash
+docker ps
+```
 
-Database integration
+View container logs:
 
-Online/offline status
+```bash
+docker logs -f chat-app
+```
 
-Typing indicators
+Remove the container:
 
-Message timestamps
-
-Read receipts
-
-HTTPS/WSS support
-
-Custom domain
-
-Nginx reverse proxy
-
-👨‍💻 Author
-
-Yuvanesh M
-
-Java Backend Developer
-
-GitHub: https://github.com/yuvanesh-m
+```bash
+docker rm -f chat-app
+```
